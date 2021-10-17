@@ -22,7 +22,7 @@ async registerUser(req,res)
        const user = await db.users.findOne({email:value.email});
        if(user)
        {
-           return res.send({error:"user already exists"});
+           return res.status(401).send({error:"user already exists"});
        }
 
        //creating salt and encrypt password
@@ -81,7 +81,7 @@ async loginUser(req,res)
         const user = await db.users.findOne({email:value.email});
         if(!user)
         {
-            return res.status(401).send({error:"user dosen't exists"});
+            return res.send({error:"user dosen't exists"});
         }
         
         //verify password
