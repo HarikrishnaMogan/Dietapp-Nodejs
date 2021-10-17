@@ -22,7 +22,7 @@ async registerUser(req,res)
        const user = await db.users.findOne({email:value.email});
        if(user)
        {
-           return res.status(401).send({error:"user already exists"});
+           return res.send({error:"user already exists"});
        }
 
        //creating salt and encrypt password
@@ -81,20 +81,23 @@ async loginUser(req,res)
         const user = await db.users.findOne({email:value.email});
         if(!user)
         {
-            return res.send({error:"user dosen't exists"});
+            return res.send({error:"user doesn't exists"});
         }
         
         //verify password
         const isValid = await bcrypt.compare(value.password,user.password);
         if(!isValid)
-        {
-            return res.status(401).send({error:"password is wrong"});
+        {   
+          
+            return res.send({error:"password is wrong"});
         }
           
          //check user is verified or not
          if(!user.isVerified)
          {
-             return res.status(403).send({error:"user is not Verified"});
+            const link = `https://dietapp437.herokuapp.com/users/verifyUser/${user._id}`;
+            await sendMail(value.email,"Verify User",link)
+             return res.send({error:"User is not Verified,Link sent to email"});
          }
 
         //creating jwt
@@ -127,7 +130,7 @@ async sendPasswordResetLink(req,res)
           const user = await db.users.findOne({email:value.email});
           if(!user)
           {
-            return res.status(401).send({error:"user doesn't exists"});
+            return res.send({error:"user doesn't exists"});
           }
           
           //creating random string and update in db
@@ -163,7 +166,7 @@ async VerifyResetLink(req,res)
         const user = await db.users.findOne({_id:ObjectId(req.params.userId)});
         if(!user)
         {
-            return res.status(401).send({error:"link expired"});
+            return res.send({error:"link expired"});
         } 
      
     //validating user
@@ -173,7 +176,7 @@ async VerifyResetLink(req,res)
     console.log(isValid);
     if(!isValid || !expire)
     {
-       return res.status(401).send({error:"reset link expired"});
+       return res.send({error:"reset link expired"});
     }
     
     res.send({success:"reset link verified"});
@@ -201,7 +204,7 @@ async resetPassword(req,res)
         const user = await db.users.findOne({_id:ObjectId(req.params.userId)});
         if(!user)
         {
-            return res.status(401).send({error:"link expired"});
+            return res.send({error:"link expired"});
         } 
         //validating user
         const isValid = await bcrypt.compare(req.params.token,user.passReset);
@@ -210,7 +213,7 @@ async resetPassword(req,res)
         console.log(isValid);
         if(!isValid || !expire)
        {
-       return res.status(401).send({error:"reset link expired"});
+       return res.send({error:"reset link expired"});
        }
         //genereate salt and encrypt password
         const salt = await bcrypt.genSalt(10);
