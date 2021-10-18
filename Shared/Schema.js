@@ -27,7 +27,9 @@ const schema = {
     targetWeight:Joi.number().required(),
     age:Joi.number().required(),
     activityFactor:Joi.number().required(),
-    totalDays:Joi.number().required()
+    totalDays:Joi.number().required(),
+    gender:Joi.string().required()
+
   }),
 
   updateCalorieSchema:Joi.object({
