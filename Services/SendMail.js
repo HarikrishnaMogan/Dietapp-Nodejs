@@ -25,7 +25,7 @@ const sendMail= async(email,subject,link)=>{
      if(err)
      {
        
-         console.log("eamil error");
+         console.log("eamil error"+err);
      }
  });
 }
