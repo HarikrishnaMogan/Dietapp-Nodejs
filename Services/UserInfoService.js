@@ -1,10 +1,10 @@
-const {userInfoSchema,updateCalorieSchema} = require("../Shared/Schema");
+const {userInfoSchema,updateCalorieSchema,NameandMailSchema} = require("../Shared/Schema");
 const db = require("../Shared/Mongo");
 const {ObjectId} = require("mongodb");
 
 const service={
 
-    async getuser(req,res)
+    async getuserDetails(req,res)
     {
         try{
              const data = await db.userinfo.findOne({userId:req.user.userId});
@@ -19,7 +19,7 @@ const service={
     async createUserInfo(req,res)
     {
         try{
-
+            
                //schema validation
                 let {error,value} = await userInfoSchema.validate(req.body);
                 if(error)
@@ -48,6 +48,7 @@ const service={
     async changeUserInfo(req,res)
     {
         try{
+            
                 //schema validation
                 let {error,value} = await userInfoSchema.validate(req.body);
                 if(error)
@@ -103,9 +104,47 @@ const service={
     {
         res.status(500).send({error:"server error"});
     }
-    }
+    },
    
+  //to get user name and email
+  async getuser(req,res)
+  {
+      try{
+            const data = await db.users.aggregate([
+                {$match:{_id:ObjectId(req.user.userId)}},
+                {$project:{email:1,name:1,_id:0}}
+            ]).toArray();
+          
+            res.send(data);
+      }
+      catch(err)
+      {
+         
+        res.status(500).send({error:"server error"});
+        
+      }
+  },
 
+  //to change username and email
+  async EmailandName(req,res)
+  {
+      try{
+            
+      
+            let {error,value} = await NameandMailSchema.validate(req.body);
+            if(error)
+            {
+                return res.status(401).send({error:error.details[0].message});
+            }
+
+            await db.users.updateOne({_id:ObjectId(req.user.userId)},{$set:{...value}});
+            res.send({success:"user name or email changed"});
+      }
+      catch(err)
+      {
+        res.status(500).send({error:"server error"});
+      }
+  }
 }
 
 module.exports = service;

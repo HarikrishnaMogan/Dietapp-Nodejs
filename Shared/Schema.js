@@ -18,7 +18,13 @@ const schema = {
   newPassSchema:Joi.object({
     password:Joi.string().min(6).max(12).required()
   }),
+ 
+   NameandMailSchema:Joi.object({
+    name:Joi.string().min(3),
+    email:Joi.string().email().pattern(/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i)
+   }),
 
+   
 
   //user info schemas
   userInfoSchema:Joi.object({
