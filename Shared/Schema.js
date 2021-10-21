@@ -34,7 +34,8 @@ const schema = {
     age:Joi.number().required(),
     activityFactor:Joi.number().required(),
     totalDays:Joi.number().required(),
-    gender:Joi.string().required()
+    gender:Joi.string().required(),
+    caloriesNeed:Joi.number().required()
 
   }),
 
