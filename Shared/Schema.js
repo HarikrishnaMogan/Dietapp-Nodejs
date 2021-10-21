@@ -42,7 +42,8 @@ const schema = {
     calories:Joi.number(),
     date:Joi.string(),
     track:Joi.array(),
-    water:Joi.number()
+    water:Joi.number(),
+    food:Joi.array()
   })
 }
 module.exports = schema;

@@ -35,7 +35,7 @@ const service={
 
                 let date = new Date().toDateString();
                 //inserting in database
-                const data = await db.userinfo.insertOne({...value,date,calories:0,water:0,track:[],userId:req.user.userId,userName:req.user.userName});
+                const data = await db.userinfo.insertOne({...value,date,calories:0,water:0,track:[],food:[],userId:req.user.userId,userName:req.user.userName});
                 res.send({success:"userinfo created"})
         }
         catch(err)
@@ -65,10 +65,10 @@ const service={
 
                 //update data
                 let date = new Date().toDateString();
-                await db.userinfo.updateOne({userId:req.user.userId,_id:ObjectId(req.params.id)},
-                {$set:{ ...value,date }});
+               const data= await db.userinfo.findOneAndUpdate({userId:req.user.userId,_id:ObjectId(req.params.id)},
+                {$set:{ ...value,date }},{returnDocument:"after"});
 
-                res.send({success:"userinfo updated"})
+                res.send(data.value);
         }
         catch(err)
         {
@@ -95,10 +95,10 @@ const service={
             }
 
             //update data
-            await db.userinfo.updateOne({userId:req.user.userId,_id:ObjectId(req.params.id)},
-            {$set:{ ...value }});
+           const data= await db.userinfo.findOneAndUpdate({userId:req.user.userId,_id:ObjectId(req.params.id)},
+            {$set:{ ...value }},{returnDocument:"after"});
 
-            res.send({success:"userinfo calories updated"}); 
+            res.send(data.value); 
     }
     catch(err)
     {
@@ -137,8 +137,8 @@ const service={
                 return res.status(401).send({error:error.details[0].message});
             }
 
-            await db.users.updateOne({_id:ObjectId(req.user.userId)},{$set:{...value}});
-            res.send({success:"user name or email changed"});
+           const data = await db.users.findOneAndUpdate({_id:ObjectId(req.user.userId)},{$set:{...value}},{returnDocument:"after"});
+            res.send(data.value);
       }
       catch(err)
       {
