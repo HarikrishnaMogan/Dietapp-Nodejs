@@ -35,7 +35,7 @@ const service={
 
                 let date = new Date().toDateString();
                 //inserting in database
-                const data = await db.userinfo.insertOne({...value,date,calories:0,water:0,track:[],food:[],userId:req.user.userId,userName:req.user.userName});
+                const data = await db.userinfo.insertOne({...value,date,calories:0,water:0,track:[],food:[],userId:req.user.userId,userName:req.user.userName,email:req.user.email});
                 res.send({success:"userinfo created"})
         }
         catch(err)
@@ -137,7 +137,10 @@ const service={
                 return res.status(401).send({error:error.details[0].message});
             }
 
+
+            await db.userinfo.updateOne({userId:req.user.userId},{$set:{...value}});
            const data = await db.users.findOneAndUpdate({_id:ObjectId(req.user.userId)},{$set:{...value}},{returnDocument:"after"});
+           
             res.send(data.value);
       }
       catch(err)
