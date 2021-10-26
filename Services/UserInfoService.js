@@ -66,7 +66,7 @@ const service={
                 //update data
                 let date = new Date().toDateString();
                const data= await db.userinfo.findOneAndUpdate({userId:req.user.userId,_id:ObjectId(req.params.id)},
-                {$set:{ ...value,date }},{returnDocument:"after"});
+                {$set:{ ...value,date,calories:0,water:0,track:[],food:[] }},{returnDocument:"after"});
 
                 res.send(data.value);
         }
