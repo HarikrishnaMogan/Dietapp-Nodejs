@@ -33,7 +33,10 @@ async registerUser(req,res)
        const{insertedId} = await db.users.insertOne({...value,isVerified:false,passReset:"0",resetlimit:0});
 
        //sending verification mail
-       const link = `https://dietapp437.herokuapp.com/users/verifyUser/${insertedId}`;
+       const link = `<p>Hi user, welcome to Dietify</p>
+        <p>Kindly click the link below to verify</p><br/>
+      <a href="https://hari-dietify.netlify.app/verifyuser/${insertedId}">Click here</a>`;
+
        await sendMail(value.email,"Verify User",link)
 
        res.status(200).send({success:"user registered success"});
@@ -95,7 +98,9 @@ async loginUser(req,res)
          //check user is verified or not
          if(!user.isVerified)
          {
-            const link = `https://dietapp437.herokuapp.com/users/verifyUser/${user._id}`;
+            const link = `<p>Hi user, welcome to Dietify</p>
+            <p>Kindly click the link below to verify</p><br/>
+          <a href="https://hari-dietify.netlify.app/verifyuser/${user._id}">Click here</a>`;
             await sendMail(value.email,"Verify User",link)
              return res.send({error:"User is not Verified,Link sent to email"});
          }
@@ -144,7 +149,9 @@ async sendPasswordResetLink(req,res)
           
 
           //send email
-          const link = `https://dietapp437.herokuapp.com/users/forgotPassword/${user._id}/${token}`;
+          const link = `<p>Hi user, password Reset verification from Dietify</p>
+          <p>Kindly click the link below to Reset your password</p><br/>
+        <a href="https://hari-dietify.netlify.app/passverifylink//${user._id}/${token}">Click here</a>`;
 
           await sendMail(user.email,"Forgot password Reset",link);
 

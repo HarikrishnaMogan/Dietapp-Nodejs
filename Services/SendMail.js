@@ -18,7 +18,7 @@ const sendMail= async(email,subject,link)=>{
      from:"diettracker456@outlook.com",
      to:email,
      subject:subject,
-     text:link
+     html:link
  }
 
   transporter.sendMail(mailOptions,(err)=>{
