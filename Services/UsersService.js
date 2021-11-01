@@ -151,7 +151,7 @@ async sendPasswordResetLink(req,res)
           //send email
           const link = `<p>Hi user, password Reset verification from Dietify</p>
           <p>Kindly click the link below to Reset your password</p><br/>
-        <a href="https://hari-dietify.netlify.app/passverifylink//${user._id}/${token}">Click here</a>`;
+        <a href="https://hari-dietify.netlify.app/passverifylink/${user._id}/${token}">Click here</a>`;
 
           await sendMail(user.email,"Forgot password Reset",link);
 
